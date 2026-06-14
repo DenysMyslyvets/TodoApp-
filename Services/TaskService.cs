@@ -68,7 +68,7 @@ public class TaskService
         return _repository.GetAll().OrderBy(t => t.Title);
     }
 
-    public (int total, int done, int pending) GetStats()
+     public (int total, int done, int pending) GetStats()
     {
         var all = _repository.GetAll().ToList();
         int done = all.Count(t => t.IsCompleted);
