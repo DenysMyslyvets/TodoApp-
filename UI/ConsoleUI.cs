@@ -4,6 +4,7 @@ using TodoApp.Services;
 
 namespace TodoApp.UI;
 
+// Konzolové uživatelské rozhraní aplikace
 public class ConsoleUI
 {
     private readonly TaskService _service;
@@ -14,6 +15,7 @@ public class ConsoleUI
         _service = service;
     }
 
+    // Hlavní smyčka aplikace
     public void Run()
     {
         Console.ForegroundColor = ConsoleColor.Cyan;
@@ -53,6 +55,7 @@ public class ConsoleUI
         }
     }
 
+    // Zpracování příkazů
     private void ExecuteCommand(string command, string args)
     {
         switch (command)
@@ -72,6 +75,7 @@ public class ConsoleUI
         }
     }
 
+    // Přidání úkolu
     private void CmdAdd()
     {
         Console.Write("Název úkolu: ");
@@ -83,36 +87,38 @@ public class ConsoleUI
         Priority priority = AskPriority();
 
         var task = _service.AddTask(title, description, priority);
-        PrintSuccess("Úkol #" + task.Id + " '" + task.Title + "' byl přidán.");
+        PrintSuccess("Úkol #" + task.Id + " byl přidán.");
     }
 
+    // Zobrazení všech úkolů
     private void CmdList()
     {
-        var tasks = _service.GetAll().ToList();
-        PrintTaskList(tasks, "Všechny úkoly");
+        PrintTaskList(_service.GetAll().ToList(), "Všechny úkoly");
     }
 
+    // Označení jako hotovo
     private void CmdDone(string args)
     {
         if (!int.TryParse(args, out int id))
         {
-            PrintError("Zadejte platné ID. Příklad: done 3");
+            PrintError("Zadejte platné ID.");
             return;
         }
 
         _service.MarkDone(id);
-        PrintSuccess("Úkol #" + id + " byl označen jako splněný.");
+        PrintSuccess("Úkol #" + id + " dokončen.");
     }
 
+    // Smazání úkolu
     private void CmdDelete(string args)
     {
         if (!int.TryParse(args, out int id))
         {
-            PrintError("Zadejte platné ID. Příklad: delete 3");
+            PrintError("Zadejte platné ID.");
             return;
         }
 
-        Console.Write("Opravdu smazat úkol #" + id + "? (a/n): ");
+        Console.Write("Opravdu smazat? (a/n): ");
         string confirm = Console.ReadLine()?.Trim().ToLower() ?? "n";
         if (confirm != "a")
         {
@@ -121,161 +127,104 @@ public class ConsoleUI
         }
 
         _service.DeleteTask(id);
-        PrintSuccess("Úkol #" + id + " byl smazán.");
+        PrintSuccess("Úkol smazán.");
     }
 
+    // Filtrace
     private void CmdFilter(string args)
     {
         switch (args.ToLower())
         {
             case "done":
-                PrintTaskList(_service.GetByStatus(true).ToList(), "Splněné úkoly");
+                PrintTaskList(_service.GetByStatus(true).ToList(), "Hotové");
                 break;
             case "pending":
-                PrintTaskList(_service.GetByStatus(false).ToList(), "Nesplněné úkoly");
+                PrintTaskList(_service.GetByStatus(false).ToList(), "Nehotové");
                 break;
             case "high":
-                PrintTaskList(_service.GetByPriority(Priority.High).ToList(), "Vysoká priorita");
+                PrintTaskList(_service.GetByPriority(Priority.High).ToList(), "High");
                 break;
             case "medium":
-                PrintTaskList(_service.GetByPriority(Priority.Medium).ToList(), "Střední priorita");
+                PrintTaskList(_service.GetByPriority(Priority.Medium).ToList(), "Medium");
                 break;
             case "low":
-                PrintTaskList(_service.GetByPriority(Priority.Low).ToList(), "Nízká priorita");
+                PrintTaskList(_service.GetByPriority(Priority.Low).ToList(), "Low");
                 break;
             default:
-                PrintError("Možnosti: done | pending | high | medium | low");
+                PrintError("Neplatný filtr.");
                 break;
         }
     }
 
+    // Třídění
     private void CmdSort(string args)
     {
         switch (args.ToLower())
         {
             case "priority":
-                PrintTaskList(_service.GetSortedByPriority().ToList(), "Seřazeno podle priority");
+                PrintTaskList(_service.GetSortedByPriority().ToList(), "Podle priority");
                 break;
             case "title":
-                PrintTaskList(_service.GetSortedByTitle().ToList(), "Seřazeno abecedně");
+                PrintTaskList(_service.GetSortedByTitle().ToList(), "Podle názvu");
                 break;
             default:
-                PrintError("Možnosti: priority | title");
+                PrintError("Neplatné třídění.");
                 break;
         }
     }
 
+    // Statistiky
     private void CmdStats()
     {
         var (total, done, pending) = _service.GetStats();
-        Console.WriteLine();
-        Console.WriteLine("=== Statistiky ===");
-        Console.WriteLine("Celkem úkolů:  " + total);
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("Splněno:       " + done);
-        Console.ResetColor();
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("Zbývá:         " + pending);
-        Console.ResetColor();
-        if (total > 0)
-        {
-            int percent = (int)((double)done / total * 100);
-            Console.WriteLine("Hotovo:        " + percent + "%");
-        }
-        Console.WriteLine();
+        Console.WriteLine($"Celkem: {total}, Hotovo: {done}, Zbývá: {pending}");
     }
 
+    // Nápověda
     private void CmdHelp()
     {
-        Console.WriteLine();
-        Console.WriteLine("=== Příkazy ===");
-        Console.WriteLine("  add              Přidat nový úkol");
-        Console.WriteLine("  list             Zobrazit všechny úkoly");
-        Console.WriteLine("  done <id>        Označit úkol jako splněný");
-        Console.WriteLine("  delete <id>      Smazat úkol");
-        Console.WriteLine("  filter <volba>   Filtrovat: done|pending|high|medium|low");
-        Console.WriteLine("  sort <volba>     Seřadit: priority|title");
-        Console.WriteLine("  stats            Zobrazit statistiky");
-        Console.WriteLine("  help             Zobrazit tuto nápovědu");
-        Console.WriteLine("  exit             Ukončit program");
-        Console.WriteLine();
+        Console.WriteLine("add, list, done, delete, filter, sort, stats, help, exit");
     }
 
+    // Ukončení
     private void CmdExit()
     {
-        Console.WriteLine("Na shledanou!");
         _running = false;
     }
 
+    // Výběr priority
     private Priority AskPriority()
     {
-        while (true)
+        Console.Write("Priorita (1-3): ");
+        string input = Console.ReadLine() ?? "";
+
+        return input switch
         {
-            Console.Write("Priorita (1-Nízká, 2-Střední, 3-Vysoká) [výchozí 2]: ");
-            string input = Console.ReadLine()?.Trim() ?? "";
-
-            if (string.IsNullOrEmpty(input)) return Priority.Medium;
-
-            if (int.TryParse(input, out int choice))
-            {
-                if (choice == 1) return Priority.Low;
-                if (choice == 2) return Priority.Medium;
-                if (choice == 3) return Priority.High;
-            }
-
-            PrintError("Zadejte 1, 2 nebo 3.");
-        }
+            "1" => Priority.Low,
+            "3" => Priority.High,
+            _ => Priority.Medium
+        };
     }
 
+    // Výpis seznamu
     private void PrintTaskList(List<TaskItem> tasks, string title)
     {
-        Console.WriteLine();
-        Console.WriteLine("=== " + title + " (" + tasks.Count + ") ===");
-
-        if (tasks.Count == 0)
+        Console.WriteLine("\n=== " + title + " ===");
+        foreach (var t in tasks)
         {
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine("  Seznam je prázdný.");
-            Console.ResetColor();
+            Console.WriteLine(t);
         }
-        else
-        {
-            foreach (var task in tasks)
-            {
-                if (task.IsCompleted)
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                else if (task.Priority == Priority.High)
-                    Console.ForegroundColor = ConsoleColor.Red;
-                else if (task.Priority == Priority.Medium)
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                else
-                    Console.ForegroundColor = ConsoleColor.White;
-
-                Console.WriteLine("  " + task);
-                Console.ResetColor();
-
-                if (!string.IsNullOrWhiteSpace(task.Description))
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    Console.WriteLine("     " + task.Description);
-                    Console.ResetColor();
-                }
-            }
-        }
-        Console.WriteLine();
     }
 
+    // OK zpráva
     private static void PrintSuccess(string msg)
     {
-        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("OK: " + msg);
-        Console.ResetColor();
     }
 
-     private static void PrintError(string msg)
+    // Error zpráva
+    private static void PrintError(string msg)
     {
-         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("Chyba: " + msg);
-        Console.ResetColor();
     }
 }
