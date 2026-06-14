@@ -1,5 +1,6 @@
 namespace TodoApp.Models;
 
+// Úrovně priority úkolu
 public enum Priority
 {
     Low,
@@ -7,6 +8,7 @@ public enum Priority
     High
 }
 
+// Model reprezentující jeden úkol
 public class TaskItem
 {
     public int Id { get; set; }
@@ -15,11 +17,12 @@ public class TaskItem
     public Priority Priority { get; set; }
     public bool IsCompleted { get; set; }
     public DateTime CreatedAt { get; set; }
-     public DateTime? CompletedAt { get; set; }
+    public DateTime? CompletedAt { get; set; }
 
+    // Vrací textovou reprezentaci úkolu pro výpis v konzoli
     public override string ToString()
     {
-         string status = IsCompleted ? "[X]" : "[ ]";
+        string status = IsCompleted ? "[X]" : "[ ]";
         string priority = Priority switch
         {
             Priority.High   => "[!!!]",
@@ -27,6 +30,7 @@ public class TaskItem
             Priority.Low    => "[!  ]",
             _               => "[   ]"
         };
+
         return status + " " + priority + " #" + Id + " " + Title;
     }
 }
