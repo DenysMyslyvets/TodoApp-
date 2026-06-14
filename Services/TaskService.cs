@@ -3,6 +3,7 @@ using TodoApp.Models;
 
 namespace TodoApp.Services;
 
+// Třída obsahující aplikační logiku pro správu úkolů
 public class TaskService
 {
     private readonly ITaskRepository _repository;
@@ -12,6 +13,7 @@ public class TaskService
         _repository = repository;
     }
 
+    // Vytvoření nového úkolu
     public TaskItem AddTask(string title, string description, Priority priority)
     {
         if (string.IsNullOrWhiteSpace(title))
@@ -29,6 +31,7 @@ public class TaskService
         return task;
     }
 
+    // Označení úkolu jako splněného
     public void MarkDone(int id)
     {
         TaskItem task = _repository.GetById(id) ?? throw new TaskNotFoundException(id);
@@ -37,6 +40,7 @@ public class TaskService
         _repository.Update(task);
     }
 
+    // Odstranění úkolu podle ID
     public void DeleteTask(int id)
     {
         _ = _repository.GetById(id) ?? throw new TaskNotFoundException(id);
@@ -48,27 +52,32 @@ public class TaskService
         return _repository.GetAll();
     }
 
+    // Filtrování úkolů podle stavu
     public IEnumerable<TaskItem> GetByStatus(bool completed)
     {
         return _repository.GetAll().Where(t => t.IsCompleted == completed);
     }
 
+    // Filtrování úkolů podle priority
     public IEnumerable<TaskItem> GetByPriority(Priority priority)
     {
         return _repository.GetAll().Where(t => t.Priority == priority);
     }
 
+    // Seřazení úkolů podle priority
     public IEnumerable<TaskItem> GetSortedByPriority()
     {
-         return _repository.GetAll().OrderByDescending(t => t.Priority);
+        return _repository.GetAll().OrderByDescending(t => t.Priority);
     }
 
+    // Seřazení úkolů podle názvu
     public IEnumerable<TaskItem> GetSortedByTitle()
     {
         return _repository.GetAll().OrderBy(t => t.Title);
     }
 
-     public (int total, int done, int pending) GetStats()
+    // Výpočet základních statistik
+    public (int total, int done, int pending) GetStats()
     {
         var all = _repository.GetAll().ToList();
         int done = all.Count(t => t.IsCompleted);
