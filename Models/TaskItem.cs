@@ -19,7 +19,7 @@ public class TaskItem
 
     public override string ToString()
     {
-        string status = IsCompleted ? "[X]" : "[ ]";
+         string status = IsCompleted ? "[X]" : "[ ]";
         string priority = Priority switch
         {
             Priority.High   => "[!!!]",
