@@ -1,4 +1,6 @@
 namespace TodoApp.Models;
+
+// Rozhraní definující operace pro práci s úkoly
 public interface ITaskRepository
 {
     IEnumerable<TaskItem> GetAll();
