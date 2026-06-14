@@ -274,7 +274,7 @@ public class ConsoleUI
 
      private static void PrintError(string msg)
     {
-        Console.ForegroundColor = ConsoleColor.Red;
+         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("Chyba: " + msg);
         Console.ResetColor();
     }
