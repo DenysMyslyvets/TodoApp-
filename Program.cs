@@ -1,8 +1,11 @@
 using TodoApp.Services;
 using TodoApp.UI;
 
-var repository = new JsonTaskRepository("tasks.json");
-var service = new TaskService(repository);
-var ui = new ConsoleUI(service);
+// Vstupní bod aplikace – zde se skládají všechny vrstvy dohromady
 
+var repository = new JsonTaskRepository("tasks.json"); // Datová vrstva (JSON soubor)
+var service = new TaskService(repository);             // Aplikační logika
+var ui = new ConsoleUI(service);                       // Uživatelské rozhraní (CLI)
+
+// Spuštění aplikace
 ui.Run();
