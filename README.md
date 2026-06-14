@@ -9,6 +9,7 @@ Tato aplikace umožňuje spravovat úkoly v konzoli.
 
 ---
 
+
 ## Funkce
 
 - přidání úkolu

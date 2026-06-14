@@ -60,7 +60,7 @@ public class TaskService
 
     public IEnumerable<TaskItem> GetSortedByPriority()
     {
-        return _repository.GetAll().OrderByDescending(t => t.Priority);
+         return _repository.GetAll().OrderByDescending(t => t.Priority);
     }
 
     public IEnumerable<TaskItem> GetSortedByTitle()

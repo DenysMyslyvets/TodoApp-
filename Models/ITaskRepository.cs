@@ -1,5 +1,4 @@
 namespace TodoApp.Models;
-
 public interface ITaskRepository
 {
     IEnumerable<TaskItem> GetAll();

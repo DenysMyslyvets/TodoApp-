@@ -69,7 +69,7 @@ public class JsonTaskRepository : ITaskRepository
         }
         catch (IOException ex)
         {
-            Console.WriteLine("Chyba při ukládání: " + ex.Message);
+             Console.WriteLine("Chyba při ukládání: " + ex.Message);
         }
     }
 

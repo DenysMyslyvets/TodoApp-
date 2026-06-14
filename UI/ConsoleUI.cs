@@ -272,7 +272,7 @@ public class ConsoleUI
         Console.ResetColor();
     }
 
-    private static void PrintError(string msg)
+     private static void PrintError(string msg)
     {
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("Chyba: " + msg);
