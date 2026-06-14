@@ -195,17 +195,24 @@ public class ConsoleUI
     // Výběr priority
     private Priority AskPriority()
     {
-        Console.Write("Priorita (1-3): ");
-        string input = Console.ReadLine() ?? "";
-
-        return input switch
+        while (true)
         {
-            "1" => Priority.Low,
-            "3" => Priority.High,
-            _ => Priority.Medium
-        };
-    }
+            Console.Write("Priorita (1-3): ");
+            string input = Console.ReadLine()?.Trim() ?? "";
 
+            if (input == "")
+            {
+                Console.WriteLine("Chyba: Musíte zadat 1, 2 nebo 3.");
+                continue;
+            }
+
+            if (input == "1") return Priority.Low;
+            if (input == "2") return Priority.Medium;
+            if (input == "3") return Priority.High;
+
+            Console.WriteLine("Chyba: Zadejte pouze 1, 2 nebo 3.");
+        }
+    }
     // Výpis seznamu
     private void PrintTaskList(List<TaskItem> tasks, string title)
     {
