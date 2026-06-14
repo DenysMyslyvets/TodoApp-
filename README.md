@@ -9,7 +9,6 @@ Tato aplikace umožňuje spravovat úkoly v konzoli.
 
 ---
 
-
 ## Funkce
 
 - přidání úkolu
@@ -39,7 +38,6 @@ Tato aplikace umožňuje spravovat úkoly v konzoli.
 ---
 
 ## Spuštění
-
 
 ```bash
 
