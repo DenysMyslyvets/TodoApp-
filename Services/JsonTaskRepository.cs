@@ -4,12 +4,14 @@ using TodoApp.Models;
 
 namespace TodoApp.Services;
 
+// Třída zajišťující ukládání a načítání úkolů z JSON souboru
 public class JsonTaskRepository : ITaskRepository
 {
     private readonly string _filePath;
     private List<TaskItem> _tasks;
     private int _nextId;
 
+    // Nastavení serializace JSON
     private static readonly JsonSerializerOptions _options = new()
     {
         WriteIndented = true,
@@ -33,6 +35,7 @@ public class JsonTaskRepository : ITaskRepository
         return _tasks.FirstOrDefault(t => t.Id == id);
     }
 
+    // Přidání nového úkolu do seznamu
     public void Add(TaskItem task)
     {
         task.Id = _nextId++;
@@ -60,6 +63,7 @@ public class JsonTaskRepository : ITaskRepository
         Save();
     }
 
+    // Uložení úkolů do JSON souboru
     public void Save()
     {
         try
@@ -69,10 +73,11 @@ public class JsonTaskRepository : ITaskRepository
         }
         catch (IOException ex)
         {
-             Console.WriteLine("Chyba při ukládání: " + ex.Message);
+            Console.WriteLine("Chyba při ukládání: " + ex.Message);
         }
     }
 
+    // Načtení úkolů ze souboru při spuštění aplikace
     private List<TaskItem> Load()
     {
         try
