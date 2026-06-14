@@ -7,6 +7,6 @@ public class TaskNotFoundException : Exception
     public TaskNotFoundException(int taskId)
         : base("Úkol s ID " + taskId + " nebyl nalezen.")
     {
-        TaskId = taskId;
+          TaskId = taskId;
     }
 }
